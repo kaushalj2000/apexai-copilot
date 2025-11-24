@@ -8,7 +8,7 @@ It turns raw lap & telemetry data from Sebring International Raceway into **acti
 - Which corners should I attack first?
 - What does the AI “race engineer” actually recommend I change?
 
----
+![Architecture](src/Architecture.jpg)
 
 ## 🔍 Key Features
 
@@ -271,4 +271,5 @@ This will:
 - Load raw Excel files from `data_raw/sebring/`
 - Generate parquet files into `data_processed/`
 - Rebuild the DuckDB database
+
 
