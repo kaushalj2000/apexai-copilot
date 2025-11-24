@@ -1,12 +1,53 @@
-# ApexAI Co-Pilot 🏎️
+# ApexAI Co-Pilot – Sebring Race Analysis 🏁
 
-Telemetry-driven race engineering assistant built for the **Toyota GR Cup – Sebring 2025** dataset.
+ApexAI Co-Pilot is an AI-assisted race engineering dashboard built for the **Toyota – Hack the Track** hackathon.  
+It turns raw lap & telemetry data from Sebring International Raceway into **actionable coaching** for a single driver:
 
-ApexAI Co-Pilot ingests timing, sector and telemetry data into DuckDB, builds derived physics and consistency metrics, and presents an interactive Streamlit dashboard with:
+- Where am I losing the most time?
+- How consistent are my laps?
+- Which corners should I attack first?
+- What does the AI “race engineer” actually recommend I change?
 
-- **Overview** – best/ideal lap KPIs, sector time-loss and lap-time consistency.
-- **Track Map & Sector Context** – visual track map plus sector deltas and detailed coaching cards.
-- **Ask ApexAI** – natural-language Q&A over the DuckDB database (SQL + explanation).
+---
+
+## 🔍 Key Features
+
+- **Driver Overview Dashboard**
+  - Best lap, ideal lap, and time left on the table
+  - Sector-level time loss and lap-time consistency
+  - Clean, dark-mode UI optimized for track-side use
+
+- **Track Map & Sector Context**
+  - Embedded Sebring sector map
+  - Sector summary table (S1 / S2 / S3) with average delta vs ideal
+  - Sector Attack Plan cards (S1→S2→S3) explaining where and how to gain time
+
+- **Ask ApexAI (Natural-Language Querying)**
+  - Ask questions like _“Is Car 7 consistent in Sector 1?”_ or  
+    _“Compare the best lap of Car 16 and Car 7.”_
+  - The app:
+    1. Generates an SQL query,
+    2. Shows the SQL,
+    3. Executes it against the DuckDB file,
+    4. Explains the result in plain English.
+
+- **ApexAI Coach – Session Summary**
+  - Short, AI-generated coaching summary for the selected driver
+  - Highlights:
+    - Time on table vs ideal lap
+    - Which sector hurts pace the most
+    - How consistent the driver is across laps
+    - Clear next-step suggestions (where to focus first)
+
+---
+
+## 🧱 Tech Stack
+
+- **Frontend:** [Streamlit](https://streamlit.io/) (Python)
+- **Database:** [DuckDB](https://duckdb.org/) (`apex_copilot.duckdb`)
+- **Data Manipulation:** `pandas`, `numpy`
+- **Visualization:** `plotly`
+- **AI / LLM:** (Optional) via `chat_agent.py` and `push_coach.py`
 
 ---
 
@@ -54,88 +95,177 @@ ApexAI_CoPilot/
 └── README.md
 ```
 
-Prerequisites
+## 🚀 Getting Started
 
-Python 3.10+
+### 1. Create & Activate a Virtual Environment
 
-DuckDB
- Python package (installed via requirements.txt)
-
-An OpenAI API key (for the Ask ApexAI and coaching text)
-
-Installation
-# 1. Clone the repo
-git clone https://github.com/<your-username>/apexai-copilot.git
-cd apexai-copilot
-
-# 2. Create and activate a virtual environment
+**Windows**
+```bash
 python -m venv .venv
+.venv\Scripts\activate
+```
 
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
+**macOS / Linux**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-# 3. Install dependencies
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-Configure your OpenAI key
+### 3. (Optional) Configure API Keys
 
-There are two options – pick one.
+If `chat_agent.py` or `push_coach.py` uses OpenAI or another LLM provider, set your API key as an environment variable.
 
-Option A – Environment variable (recommended)
-# PowerShell example
-$env:OPENAI_API_KEY = "sk-..."
+**Windows (CMD)**
+```cmd
+set OPENAI_API_KEY=your_key_here
+```
 
-Option B – config/openai_key file (project-local)
+**macOS / Linux**
+```bash
+export OPENAI_API_KEY=your_key_here
+```
 
-Create a file:
+*If your version of the app does not use external LLM APIs, you can skip this step.*
 
-config/openai_key
-
-
-Put only your key inside:
-
-sk-XXXXXXXXXXXXXXXXXXXXXXXX
-
-
-This file is in .gitignore so it won’t be committed.
-
-Running the Streamlit App
-
-From the project root:
-
+### 4. Run the Streamlit App
+From the repository root:
+```bash
 streamlit run src/ui/app_streamlit.py
+```
 
+Then open the URL shown in your terminal (usually 👉 http://localhost:8501).
 
-Then open the URL shown in your terminal (usually http://localhost:8501).
+---
 
-The app will:
+## 🕹️ How to Use the App
 
-Load the existing apex_copilot.duckdb database.
+### ⭐ 1. Select a Driver
 
-Read driver/coaching/insights from data_processed/.
+Use the dropdown in the left sidebar. The sidebar also displays:
 
-Render:
+- Driver ID  
+- Car number  
+- Class  
 
-Overview tab with KPIs, sector time-loss and lap-time consistency.
+Your custom logo will also appear at the top.
 
-Track Map & Sector Context tab with the Sebring map, sector summary and detailed “Sector Attack Plan” cards.
+### 📊 2. Overview Tab
 
-Ask ApexAI tab where you can ask free-form questions like
+This tab shows a complete snapshot of the driver's performance:
 
-“Is Car 7 consistent in Sector 1?”
-and see the generated SQL, raw query result, and a short explanation.
+- **KPI Section**
+- **Best Lap**
+- **Ideal Lap**
+- **Time on Table** (difference between best and ideal)
 
-Rebuilding the Database (Optional)
+**Visualizations:**
 
-If you want to rebuild apex_copilot.duckdb from the raw Excel files in data_raw/sebring/:
+- 📉 **Time Loss by Sector**  
+  Shows how much time the driver is losing in S1, S2, S3.
 
-python setup_project.py  # or the appropriate pipeline entry point
+- 📈 **Lap Time Consistency**  
+  A line chart of actual vs ideal lap times to understand stability.
 
+- 🤖 **ApexAI Coach – Session Summary**  
+  Provides a 3-line coaching summary including:
+  - Where most time is lost  
+  - Which sector matters the most  
+  - Driving style observations  
+  - Clear improvement guidance
+
+### 🗺️ 3. Track Map Tab
+
+This tab helps you connect data → corners → coaching.
+
+- 🏁 **Sebring Track Map**  
+  Displays the full track with S1 / S2 / S3 highlighted.
+
+- 📘 **Sector Summary**  
+  A compact table showing:
+
+  | Sector | Avg Δ vs Ideal (s) |
+  |--------|---------------------|
+
+  Helps identify which sector contributes the most to overall loss.
+
+- 🔧 **Sector Attack Plan**  
+  Three coaching cards (S1 → S2 → S3), each explaining:
+  - Where the time loss occurs  
+  - What inputs (brake, throttle, steering) cause the loss  
+  - How to improve: braking point, entry speed, apex rotation, exit throttle, etc.
+
+  This is designed for real race-engineering style coaching.
+
+### 💬 4. Ask ApexAI Tab
+
+The most powerful feature — natural language analytics.
+
+**How to use:**
+1. Select a driver in the sidebar.
+2. Ask a question like:
+   - "Is Car 7 consistent in Sector 1?"
+   - "Compare the best lap of Car 16 and Car 7."
+   - "Where is Driver D_13 losing the most time?"
+
+**You will get:**
+
+- 🟦 **Generated SQL**  
+  The query the model created from your question.
+
+- 🟩 **Query Result**  
+  Numbers pulled from the DuckDB database.
+
+- 🟧 **ApexAI Explanation**  
+  A 1–3 sentence natural-language summary that combines:
+  - SQL results  
+  - Driver context  
+  - Sector logic  
+
+This makes analysis accessible to drivers, engineers, and team managers.
+
+---
+
+## ✅ Testing Checklist
+
+Before sharing your repo, verify everything works:
+
+### General
+- ✔ `streamlit run src/ui/app_streamlit.py` runs without errors  
+- ✔ Sidebar shows your logo, driver dropdown, and updates the driver card
+
+### Overview Tab
+- ✔ KPI values update per driver  
+- ✔ Time Loss by Sector chart shows 3 bars (S1/S2/S3)  
+- ✔ Lap Time Consistency chart loads correctly  
+- ✔ ApexAI Session Summary text updates
+
+### Track Map Tab
+- ✔ Track map image loads  
+- ✔ Sector Summary table looks correct  
+- ✔ Sector Attack Plan cards appear in order: S1 → S2 → S3
+
+### Ask ApexAI Tab
+- ✔ SQL is generated for valid questions  
+- ✔ Query executes without errors  
+- ✔ ApexAI explanation text matches the result
+
+*When all tests pass, the app is ready for judges, teammates, or recruiters 🚀*
+
+---
+
+## 🔁 (Optional) Rebuild the Processed Data
+
+If you want to regenerate all Parquet files and rebuild `apex_copilot.duckdb`:
+```bash
+python setup_project.py
+```
 
 This will:
-
-Load raw timing and telemetry Excel files.
-
-Generate intermediate Parquet files in data_processed/.
-
-Create or update apex_copilot.duckdb.
+- Load raw Excel files from `data_raw/sebring/`
+- Generate parquet files into `data_processed/`
+- Rebuild the DuckDB database
