@@ -23,8 +23,8 @@ It turns raw lap & telemetry data from Sebring International Raceway into **acti
   - Sector Attack Plan cards (S1→S2→S3) explaining where and how to gain time
 
 - **Ask ApexAI (Natural-Language Querying)**
-  - Ask questions like _“Is Car 7 consistent in Sector 1?”_ or  
-    _“Compare the best lap of Car 16 and Car 7.”_
+  - Ask questions like **_“Is Car 7 consistent in Sector 1?”_** or  
+    **_“Compare the best lap of Car 16 and Car 11.”_**
   - The app:
     1. Generates an SQL query,
     2. Shows the SQL,
@@ -211,6 +211,8 @@ The most powerful feature — natural language analytics.
    - "Is Car 7 consistent in Sector 1?"
    - "Compare the best lap of Car 16 and Car 7."
    - "Where is Driver D_13 losing the most time?"
+   - "Why am I losing time in Sector 3? Check my braking."
+   - "What is the ideal lap time for Car 11?"
 
 **You will get:**
 
@@ -269,3 +271,4 @@ This will:
 - Load raw Excel files from `data_raw/sebring/`
 - Generate parquet files into `data_processed/`
 - Rebuild the DuckDB database
+
