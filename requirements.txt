@@ -1,0 +1,9 @@
+pandas
+duckdb
+plotly
+streamlit
+openai
+ipykernel
+pyyaml
+pyarrow
+openpyxl
