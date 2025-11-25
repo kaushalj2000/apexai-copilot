@@ -12,7 +12,7 @@ from google import genai
 # --------------------------------------------------------------------
 DB_PATH = "apex_copilot.duckdb"
 INSIGHTS_PATH = Path("data_processed/driver_insights.json")
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 API_KEY_PATH = "config/openai_key.txt"
 
 def load_api_key() -> str:
