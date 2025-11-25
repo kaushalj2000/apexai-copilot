@@ -22,10 +22,10 @@ RATE_LIMIT_BACKOFF_SEC = 5.0 # base backoff when we see rate-limit
 _last_llm_call_ts: float = 3.0
 
 
-# Gemini model (pick the one you want; this is a good default)
-GEMINI_MODEL = "gemini-2.5-flash"  # or "gemini-2.0-pro" if your key allows
+# Gemini model
+GEMINI_MODEL = "gemini-2.0-flash" 
 
-API_KEY_PATH = "config/openai_key.txt"  # file now holds your GEMINI key
+API_KEY_PATH = "config/openai_key.txt"
 
 
 def load_api_key() -> str:
